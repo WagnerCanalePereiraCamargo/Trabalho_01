@@ -694,7 +694,7 @@ já é reativo e já está implementado, tudo funcionará corretamente!
     Bem simples também. Vamos ao exemplo:
 
     • index.html
-    
+
 <script src="http://unpkg.com/vue@next"></script>
 <DIV id="divPrincipal">
  <input v-model="corMsg"> Cor do texto </input>
@@ -703,3 +703,144 @@ já é reativo e já está implementado, tudo funcionará corretamente!
  {{ verMsg ? msgInicial : 'Sem mensagens!' }} </h1>
 </DIV>
 <script src="./meuScript.JS"></script>
+
+• meuScript.js
+
+const meuPrimeiroApp = Vue.createApp({
+ data() {
+ return {
+ msgInicial: 'Bem-vindo ao VUE.JS',
+ verMsg: false, 
+ corMsg: false
+ }
+ }
+})
+const mountedApp = meuPrimeiroApp.mount('#divPrincipal')
+
+    Observe que a alteração no script foi apenas a criação de mais uma 
+    variável.
+    Já no arquivo HTML, a alteração foi na criação da TAG H1 ao 
+    acrescentarmos 
+    v-bind:style=" { color: corMsg } antes do fechamento da TAG de criação.
+    O v-bind e sucedido por um sinal de dois-pontos e então a propriedade da 
+    TAG a qual se deseja alterar (no nosso caso a propriedade style). Após isso, o 
+    sinal de chaves é necessário aqui por termos uma propriedade dentro da própria 
+    propriedade style que é a propriedade color). então, após o nome da 
+    propriedade, o nome da variável que contêm o valor a ser utilizado.
+    Então você verá que, ao escrever “red” na caixa de texto, a TAG H1 ficará, 
+    como se deve esperar, vermelha
+
+2.4.LAÇOS E CONDICIONAIS
+
+    Muito bem (estou orgulhoso de ver você bem até aqui...)
+    Até agora vimos diretivas que sempre fazem as coisas da mesma forma. 
+    Você pode discordar por causa dos if ternários, mas isso não é do VUE e, 
+    portanto, não uma diretiva ou a capacidade de uma: aquilo é JavaScript, bebê.
+    Nos casos em que o JavaScript por der mais complexo, temos o uso de 
+    um if específico para o VUE, assim como um equivalente a um else. São as 
+    diretivas v-if e v-else. Vai, de carona neste tópico, a diretiva v-show que se 
+    assemelha muito ao v-if.
+    Após vamos ver o equivalente ao for (v-for) e uma diretiva que intercepta 
+    eventos de componentes HTML (a diretiva v-on). Todas com explicações e um 
+    exemplo simples.
+
+2.4.1. V-IF / V-ELSE-IF / V-ELSE
+
+Vamos começar por este trio. Faremos, com estas diretivas, sempre o 
+esquema “exemplo-explicação”.
+Então observe as alterações apenas no HTML:
+
+<script src="http://unpkg.com/vue@next"></script>
+<DIV id="divPrincipal">
+ <input v-model="corMsg"> digite uma cor para o texto 
+</input>
+ <h3 v-if="corMsg === 'red'"> Já sei! : VERMELHO</h3>
+ <h3 v-else-if="corMsg === 'green'"> Já sei! : VERDE </h3>
+ <h3 v-else-if="corMsg === 'blue'"> Já sei! : AZUL </h3>
+ <h3 v-else> Esta cor eu não conheço</h3>
+ <input type="checkbox" v-model="verMsg"> Ver </input>
+ <h1 v-bind:style=" { color: corMsg } ">{{ verMsg ? 
+msgInicial : 'Sem mensagens!' }}</h1>
+</DIV>
+<script src="./meuScript.JS"></script>
+
+    Veja a sequência. É autoexplicativa, não é?
+    Note que as tags H3 em questão só irão aparecer caso a condição 
+    vinculada à diretiva retornar true.
+    E, finalmente, note que v-else sempre irá considerar o v-if anterior mais 
+    próximo.
+
+2.4.2. V-SHOW
+
+    Utilizar v-if e v-show não mudará nada visualmente. Apenas no código. 
+    Enquanto v-if adiciona o conteúdo com a condição, v-show sempre o fará e 
+    exibirá apenas com a condição verdadeira.
+    E o que muda? Para pequenas coisas, nada. Para grandes blocos, 
+    significa que, no caso do v-show, tudo será carregado na tela e então, após 
+    carregado, ficará mais rápido exibir na tela. Também garante que, no caso do v-
+    if, as coisas serão criadas e destruídas sempre que houver a alternância da 
+    variável vinculada.
+    Observe este (não muito curto) trecho de uma das nossas referências 
+    bibliográficas que descreve a diferença entre v-show e v-if:
+    v-if é a renderização condicional “real”, pois garante que eventos e 
+    componentes filhos dentro do bloco condicional sejam devidamente 
+    destruídos e recriados durante a alternância.
+    v-if também é preguiçoso: se a condição for false na renderização 
+    inicial, nada será feito - o bloco condicional não será processado até 
+    que a condição se torne true pela primeira vez.
+    Em comparação, v-show é mais simples - o elemento sempre será   
+    renderizado independentemente da condição inicial, com alternância 
+    baseada em CSS.
+    De modo geral, v-if tem custo maior durante alternâncias de 
+    visibilidade, enquanto v-show tem custo maior na renderização inicial. 
+    Então prefira v-show se precisar alternar a visibilidade de algo com 
+    muita frequência; e prefira v-if se a condição não tem tanta 
+    probabilidade de se modificar durante a execução. (EVAN YOU, 2020c)
+
+2.4.3. V-FOR
+
+    Vamos ao exemplo, iniciando pela criação de um array no arquivo de 
+
+scripts:
+const meuPrimeiroApp = Vue.createApp({
+ data() {
+ return {
+ msgInicial: 'Bem-vindo ao VUE.JS',
+ verMsg: false, 
+ corMsg: false,
+ cores: [ 
+ { ptbr: 'AZUL' },
+ { ptbr: 'VERDE' },
+ { ptbr: 'VERMELHO' }
+ ]
+ }
+ }
+})
+const mountedApp = meuPrimeiroApp.mount('#divPrincipal')
+
+Isto segue os princípios do JavaScript, e não deve parecer uma coisa 
+estranha a você
+
+Vamos agora ao arquivo HTML
+
+<script src="http://unpkg.com/vue@next"></script>
+<DIV id="divPrincipal">
+ <input v-model="corMsg"> digite uma cor para o texto </input>
+ <h3 v-if="corMsg === 'red'"> Já sei! : VERMELHO</h3>
+ <h3 v-else-if="corMsg === 'green'"> Já sei! : VERDE </h3>
+ <h3 v-else-if="corMsg === 'blue'"> Já sei! : AZUL </h3>
+ <h3 v-else> Esta cor eu não conheço</h3>
+ <input type="checkbox" v-model="verMsg"> Ver </input>
+ <h1 v-bind:style=" { color: corMsg } ">{{ verMsg ? msgInicial 
+: 'Sem mensagens!' }}</h1>
+ <ul >
+ <li v-for="cor in cores" :key="cor.ptbr">
+ {{ cor.ptbr }}
+ </li>
+ </ul>
+</DIV>
+<script src="./meuScript.JS"></script> 
+
+Perceba uma TAG de lista ordenada que receberá o v-for. É criada uma 
+variável cor dinâmica e temporariamente para este for. Finalmente são exibidos 
+os valores obtidos lá na variável.

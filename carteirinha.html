@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/vue@3"></script>
+  <script src="scripts.js" defer></script>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      width: 100%;
+    }
+    #divPrincipal {
+      width: 100%;
+      display: flex;
+    }
+    .dform, .dtable {
+      display: inline-block;
+      width: 50%;
+      vertical-align: top;
+    }
+    .dtable {
+      padding-left: 20px;
+    }
+    .student-card {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start; /* Alinha os itens à esquerda */
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .student-card img {
+      max-width: 100px;
+      max-height: 100px;
+      margin-bottom: 10px;
+    }
+    .container-white {
+      background-color: white; /* Fundo branco */
+      padding: 10px; /* Espaçamento interno */
+      border-radius: 5px; /* Borda arredondada */
+      margin-bottom: 10px; /* Espaçamento inferior */
+    }
+  </style>
+</head>
+<body>
+  <div id="divPrincipal">
+    <div class="dform">
+      <div v-bind:style="{ background: mode ? corEscura : corClara, color: mode ? corClara : corEscura }" class="container-white">
+        <label for="checkbox">
+          <input type="checkbox" id="checkbox" v-model="mode"> Modo Noturno
+        </label>
+        <form>
+          <input type="file" @change="onFileChange" required/><br>
+          <div class="container-black">
+            <table>
+              <tr>
+                <td>Foto</td>
+                <td><input type="checkbox" v-model="showImage"></td>
+              </tr>
+              <tr>
+                <td>Nome do Aluno</td>
+                <td><input type="text" name="nome" v-model="pessoas[0].nome" placeholder="Nome" required :style="{color: mode ? 'black' : 'inherit'}"></td>
+              </tr>
+              <tr>
+                <td>Nome do Curso</td>
+                <td><input type="text" name="curso" v-model="pessoas[0].nCurso" placeholder="Curso" required :style="{color: mode ? 'black' : 'inherit'}"></td>
+              </tr>
+              <tr>
+                <td>RA</td>
+                <td><input type="number" name="ra" v-model="pessoas[0].ra" placeholder="RA" required :style="{color: mode ? 'black' : 'inherit'}"></td>
+              </tr>
+              <tr>
+                <td>Ano do Curso</td>
+                <td><input type="number" name="serie" v-model="pessoas[0].aCurso" placeholder="Ano" required :style="{color: mode ? 'black' : 'inherit'}"></td>
+              </tr>
+            </table>
+          </div>
+          <input type="button" value="Enviar">
+        </form>
+      </div>
+    </div>
+    <div class="dtable">
+      <div class="student-card" v-bind:style="{ background: mode ? corEscura : corClara, color: mode ? corClara : corEscura }">
+        <img v-if="showImage && pessoas[0].img" :src="pessoas[0].img" alt="Foto">
+        <p><strong>Nome do Aluno:</strong> {{ pessoas[0].nome }}</p>
+        <p><strong>Nome do Curso:</strong> {{ pessoas[0].nCurso }}</p>
+        <p><strong>RA:</strong> {{ pessoas[0].ra }}</p>
+        <p><strong>Ano do Curso:</strong> {{ pessoas[0].aCurso }}</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
